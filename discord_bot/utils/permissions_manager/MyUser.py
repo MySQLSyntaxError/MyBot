@@ -4,12 +4,17 @@ import discord
 from discord.ext import commands
 import asyncio
 import aiosqlite
+from .MyGuild import MyGuild
 
 
-class PermissionsUser:
+class MyUser:
     def __init__(self, member, guild):
         self.member: discord.Member = member
         self.guild: discord.Guild = guild
+        self.myGuild = MyGuild(self.guild)
+
+        if not self.is_in_database():
+            self.add_to_database()
 
     async def is_in_database(self):
         main = await aiosqlite.connect('main.db')
@@ -55,19 +60,19 @@ class PermissionsUser:
         async with open(str(self.guild.id) + '.json', 'r') as f:
             data = json.load(f)
 
-        permissions_list = data["permissions"]
-        user_list = permissions_list[str(self.member.id)]
+        users_list = data['users']
+        user_list = users_list[str(self.member.id)]
         user_permissions = user_list["self_permissions"]
 
-        return user_permissions
+        return user_permissions + self.myGuild.get_group_permissions(self.get_user_group())
 
     async def get_user_group(self):
         async with open(str(self.guild.id) + '.json', 'r') as f:
             data = json.load(f)
 
-        permissions_list = data["permissions"]
-        user_list = permissions_list[str(self.member.id)]
-        user_group = user_list["group"]
+        users_list = data['users']
+        user_list = users_list[str(self.member.id)]
+        user_group = user_list['group']
 
         return user_group
 
@@ -77,12 +82,27 @@ class PermissionsUser:
 
         users_permissions = await self.get_user_permissions()
 
-        users_permissions = users_permissions + '^^^' + permission.lower()
+        users_permissions = users_permissions + permission.lower() + '^^^'
 
-        data["permissions"][str(self.member.id)]["self_permissions"] = users_permissions
+        data["users"][str(self.member.id)]["self_permissions"] = users_permissions
 
         async with open(str(self.guild.id) + '.json', 'w') as f:
             json.dump(data, f)
 
+    async def remove_user_permission(self, permission: str):
+        async with open(str(self.guild.id) + '.json', 'r') as f:
+            data = json.load(f)
 
+        users_permissions = await self.get_user_permissions()
 
+        users_permissions = users_permissions.replace(permission.lower() + '^^^', "")
+
+        data["users"][str(self.member.id)]["self_permissions"] = users_permissions
+
+        async with open(str(self.guild.id) + '.json', 'w') as f:
+            json.dump(data, f)
+
+    async def user_has_permission(self, permission: str):
+        user_permissions = await self.get_user_permissions()
+
+        return permission.lower() in user_permissions
