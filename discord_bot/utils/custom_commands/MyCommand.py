@@ -22,10 +22,14 @@ class MyCommand:
 
         all_commands = await self.get_custom_commands()
 
-        all_commands[command.lower()] = {
-            'parameters': parameter,
-            'response': response
+        new_data = {
+            f"{command.lower()}": {
+                'parameters': parameter,
+                'response': response
+            }
         }
+
+        all_commands.update(new_data)
 
         async with open(str(self.guild.id) + '.json', 'w') as f:
             json.dump(all_commands, f)
@@ -51,11 +55,41 @@ class MyCommand:
         return self.get_custom_command(command.lower())['response']
 
     async def add_custom_command_parameter(self, command: str, new_parameter: str):
-        custom_command = await self.get_custom_command(command.lower())
+        all_commands = await self.get_custom_commands()
+
+        custom_command = all_commands[command.lower()]
 
         current_parameters = custom_command['parameters']
 
-        current_parameters = current_parameters + "^^^" + new_parameter.lower()
+        current_response = await self.get_custom_command_response(command)
+
+        new_data = {
+            f"{command.lower()}": {
+                "parameters": current_parameters + new_parameter.lower() + "^^^",
+                "response": current_response
+            }
+        }
+
+        all_commands.update(new_data)
 
         async with open(str(self.guild.id) + '.json', 'w') as f:
-            json.dump(current_parameters)
+            json.dump(all_commands, f)
+
+    async def set_custom_command_response(self, command: str, *args):
+        response = " ".join(args)
+        all_commands = await self.get_custom_commands()
+
+        current_parameters = await self.get_custom_command_parameter(command)
+
+        new_data = {
+            f"{command.lower()}": {
+                "parameters": current_parameters,
+                "response": response
+            }
+        }
+
+        all_commands.update(new_data)
+
+        async with open(str(self.guild.id) + '.json', 'w') as f:
+            json.dump(all_commands, f)
+

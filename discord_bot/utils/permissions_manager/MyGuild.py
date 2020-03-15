@@ -92,3 +92,29 @@ class MyGuild:
 
     async def group_has_permission(self, group: str, permission: str):
         return permission.lower() in self.get_group_permissions(group)
+
+    async def remove_group(self, group: str):
+        all_groups = await self.get_groups()
+
+        del all_groups[group]
+
+        async with open(str(self.guild.id), 'w') as f:
+            json.dump(all_groups, f)
+
+    async def add_group(self, group_name: str, inherit_group: str, *args):
+        permissions = "^^^".join(args)
+
+        all_groups = await self.get_groups()
+
+        new_data = {
+            f"{group_name}": {
+                "inherits": inherit_group,
+                "permissions": permissions
+            }
+        }
+
+        all_groups.update(new_data)
+
+
+        async with open(str(self.guild.id), 'w') as f:
+            json.dump(all_groups, f)
