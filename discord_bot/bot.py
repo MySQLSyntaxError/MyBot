@@ -1,4 +1,5 @@
 import discord
+import os
 from discord.ext import commands
 import asyncio
 import datetime
@@ -23,11 +24,8 @@ bot.remove_command('help')
 @bot.event
 async def on_ready():
     print("Logged in as User: " + bot.user.name)
-    while 1 == 1:
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"on {len(bot.guilds)} Servers"))
-        await asyncio.sleep(5)
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"on {len(bot.get_all_members())} Users"))
-        await asyncio.sleep(5)
+    bot.load_extension('cogs.custom_command_handler.commands.CreateCustomCommand')
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"on {len(bot.guilds)} Servers"))
 
 
 @bot.event 
