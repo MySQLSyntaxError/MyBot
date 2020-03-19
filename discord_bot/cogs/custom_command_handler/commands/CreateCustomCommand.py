@@ -69,38 +69,91 @@ class CreateCustomCommand(commands.Cog):
 
                 await message.edit(embed=embed)
             elif current_page == max_pages:
-                current_page = 1
+                current_page = max_pages - 1
 
-                embed = discord.Embed(color=self.bot.user.color, title=f"Custom Commands Hilfe Seite `{current_page}/{max_pages}`",
-                                       description=f"Das ist die Hilfe von den Custom Commands, durch reagieren mit unteren Reaktionen,"
-                                                   f"kannst du die Seiten ändern. \nFalls du fertig bist, kannst du auf das ❌ Emote reagieren.\n"
-                                                   f"Damit stoppst du die Hilfe, ansonsten kannst du auch 15 Minuten warten, dann wird die Hilfe automatisch ungültig.")
+                embed = discord.Embed(color=self.bot.user.color,
+                                      title=f"Custom Commands Hilfe Seite `{current_page}/{max_pages}`",
+                                      description=f"```\n"
+                                                  f"- {GUILD_PREFIX}custom list | Zeigt alle Custom "
+                                                  f"Commands an!\n"
+                                                  f"- {GUILD_PREFIX}custom create <NAME> <PARAMETER...> |"
+                                                  f"Erstellt einen Custom Command und leitet den User "
+                                                  f"zu dem Setup weiter!\n"
+                                                  f"- {GUILD_PREFIX}custom set <NAME> response <ANTWORT...> | "
+                                                  f"Setzt die Antwort des Commands neu!\n"
+                                                  f"- {GUILD_PREFIX}custom add <NAME> parameter <PARAMETER...> | "
+                                                  f"Fügt mehr Paramater hinzu!\n"
+                                                  f"- {GUILD_PREFIX}custom remove <NAME> parameter <PARAMETER...> | "
+                                                  f"Entfernt Parameter!```")
                 embed.timestamp = datetime.datetime.utcnow()
 
                 await message.edit(embed=embed)
 
             else:
-                current_page += 1
+                current_page -= 1
 
-                if current_page == 2:
-                    embed = discord.Embed(color=self.bot.user.color, title=f"Custom Commands Hilfe Seite `{current_page}/{max_pages}`",
-                                           description=f"```\n"
-                                                       f"- {GUILD_PREFIX}custom list | Zeigt alle Custom "
-                                                       f"Commands an!\n"
-                                                       f"- {GUILD_PREFIX}custom create <NAME> <PARAMETER...> |"
-                                                       f"Erstellt einen Custom Command und leitet den User "
-                                                       f"zu dem Setup weiter!\n"
-                                                       f"- {GUILD_PREFIX}custom set <NAME> response <ANTWORT...> | "
-                                                       f"Setzt die Antwort des Commands neu!\n"
-                                                       f"- {GUILD_PREFIX}custom add <NAME> parameter <PARAMETER...> | "
-                                                       f"Fügt mehr Paramater hinzu!\n"
-                                                       f"- {GUILD_PREFIX}custom remove <NAME> parameter <PARAMETER...> | "
-                                                       f"Entfernt Parameter!```")
+                if current_page == 1:
+                    embed = discord.Embed(color=self.bot.user.color,
+                                          title=f"Custom Commands Hilfe Seite `{current_page}/{max_pages}`",
+                                          description=f"Das ist die Hilfe von den Custom Commands, durch reagieren mit unteren Reaktionen,"
+                                                      f"kannst du die Seiten ändern. \nFalls du fertig bist, kannst du auf das ❌ Emote reagieren.\n"
+                                                      f"Damit stoppst du die Hilfe, ansonsten kannst du auch 15 Minuten warten, dann wird die Hilfe automatisch ungültig.")
                     embed.timestamp = datetime.datetime.utcnow()
 
                     await message.edit(embed=embed)
+        elif '⏩' in str(reaction.emoji):
+            if current_page == 1:
+                current_page = 2
 
-        #embed = discord.Embed(color=self.bot.user.color, title=f"Custom Commands", description=f"```\n"
+                embed = discord.Embed(color=self.bot.user.color,
+                                      title=f"Custom Commands Hilfe Seite `{current_page}/{max_pages}`",
+                                      description=f"```\n"
+                                                  f"- {GUILD_PREFIX}custom list | Zeigt alle Custom "
+                                                  f"Commands an!\n"
+                                                  f"- {GUILD_PREFIX}custom create <NAME> <PARAMETER...> |"
+                                                  f"Erstellt einen Custom Command und leitet den User "
+                                                  f"zu dem Setup weiter!\n"
+                                                  f"- {GUILD_PREFIX}custom set <NAME> response <ANTWORT...> | "
+                                                  f"Setzt die Antwort des Commands neu!\n"
+                                                  f"- {GUILD_PREFIX}custom add <NAME> parameter <PARAMETER...> | "
+                                                  f"Fügt mehr Paramater hinzu!\n"
+                                                  f"- {GUILD_PREFIX}custom remove <NAME> parameter <PARAMETER...> | "
+                                                  f"Entfernt Parameter!```")
+                embed.timestamp = datetime.datetime.utcnow()
+
+                await message.edit(embed=embed)
+            elif current_page == max_pages:
+                current_page = 1
+
+                embed = discord.Embed(color=self.bot.user.color,
+                                      title=f"Custom Commands Hilfe Seite `{current_page}/{max_pages}`",
+                                      description=f"Das ist die Hilfe von den Custom Commands, durch reagieren mit unteren Reaktionen,"
+                                                  f"kannst du die Seiten ändern. \nFalls du fertig bist, kannst du auf das ❌ Emote reagieren.\n"
+                                                  f"Damit stoppst du die Hilfe, ansonsten kannst du auch 15 Minuten warten, dann wird die Hilfe automatisch ungültig.")
+                embed.timestamp = datetime.datetime.utcnow()
+
+                await message.edit(embed=embed)
+            else:
+                current_page = max_pages
+
+                embed = discord.Embed(color=self.bot.user.color,
+                                      title=f"Custom Commands Hilfe Seite `{current_page}/{max_pages}`",
+                                      description=f"```\n"
+                                                  f"- {GUILD_PREFIX}custom embed <NAME> <TRUE|FALSE> | "
+                                                  f"\"TRUE\" aktiviert das Embed, \"FALSE\" deaktiviert das Embed!\n"
+                                                  f"- {GUILD_PREFIX}custom embed <NAME> title <TITEL...> | "
+                                                  f"Setzt den Embed Title, \"none\" für keinen Title!\n"
+                                                  f"- {GUILD_PREFIX}custom embed <NAME> desc <DESC...> | "
+                                                  f"Setzt die Embed Description, \"none\" für keine Description!\n"
+                                                  f"- {GUILD_PREFIX}custom embed <NAME> timestamp <TRUE|FALSE> | "
+                                                  f"\"TRUE\" lässt im Footer des Embeds die Uhrzeit anzeigen, \"FALSE\" deaktiviert dies!\n"
+                                                  f"- {GUILD_PREFIX}custom embed <NAME> thumbnail <TRUE|FALSE> | \"TRUE\" aktiviert "
+                                                  f"das Thumbnail bei dem Embed, \"FALSE\" deaktiviert es!```")
+                embed.timestamp = datetime.datetime.utcnow()
+
+                await message.edit(embed=embed)
+
+        # embed = discord.Embed(color=self.bot.user.color, title=f"Custom Commands", description=f"```\n"
         #                                                                                       f"- {GUILD_PREFIX}list | Zeigt alle Custom "
         #                                                                                       f"Commands an!\n"
         #                                                                                       f"- {GUILD_PREFIX}create <NAME> <PARAMETER...> |"
