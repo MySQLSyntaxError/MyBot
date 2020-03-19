@@ -106,3 +106,6 @@ class MyUser:
         user_permissions = await self.get_user_permissions()
 
         return permission.lower() in user_permissions
+
+    async def ban(self):
+        await self.member.ban()
