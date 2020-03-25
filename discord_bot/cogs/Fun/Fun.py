@@ -14,7 +14,7 @@ class Fun(commands.Cog, name="Fun"):
         self.bot: discord.Client = bot
 
     @commands.command(name="eightball", aliases=["8ball"])
-    async def eightball(self, ctx,*,Frage):
+    async def eightball(self, ctx, *, Frage):
         embed = discord.Embed(title=f"8ball", color=EMBEDCOLOR)
         embed.set_author(name=ctx.author.name, icon_url=f"{ctx.author.avatar_url}")
         embed.add_field(name=f"Deine Frage: {Frage}", value=f"Antwort: {random.choice(eightball)}")
@@ -27,7 +27,7 @@ class Fun(commands.Cog, name="Fun"):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def roll(self, ctx, number:int):
+    async def roll(self, ctx, number: int):
         x = randint(1,6)
         if x == number:
             embed = discord.Embed(title=None,description=f"Du hast gewonnen!\r\nDu hast eine {number} gewählt und der Bot hat eine {x} gewürfelt.",color=EMBEDCOLOR)
